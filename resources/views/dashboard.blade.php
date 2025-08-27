@@ -12,7 +12,7 @@
                             <h3 class="text-lg sm:text-xl font-semibold">Denúncias</h3>
                             <i class="fas fa-clipboard-list text-2xl sm:text-3xl text-blue-600"></i>
                         </div>
-                        <p class="text-2xl font-bold text-blue-600">24</p>
+                        <p class="text-2xl font-bold text-blue-600">{{ $tot_denuncias }}</p>
                         <p class="text-sm text-gray-600">Total de denúncias</p>
                     </div>
 
@@ -21,7 +21,7 @@
                             <h3 class="text-lg sm:text-xl font-semibold">Pendentes</h3>
                             <i class="fas fa-clock text-2xl sm:text-3xl text-yellow-600"></i>
                         </div>
-                        <p class="text-2xl font-bold text-yellow-600">8</p>
+                        <p class="text-2xl font-bold text-yellow-600">{{ $denuncias_pendentes }}</p>
                         <p class="text-sm text-gray-600">Aguardando análise</p>
                     </div>
 
@@ -30,7 +30,7 @@
                             <h3 class="text-lg sm:text-xl font-semibold">Resolvidas</h3>
                             <i class="fas fa-check-circle text-2xl sm:text-3xl text-green-600"></i>
                         </div>
-                        <p class="text-2xl font-bold text-green-600">12</p>
+                        <p class="text-2xl font-bold text-green-600">{{ $denuncias_concluidas }}</p>
                         <p class="text-sm text-gray-600">Concluídas</p>
                     </div>
                 </div>

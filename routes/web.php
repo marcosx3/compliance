@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TemplateController;
@@ -27,12 +28,11 @@ Route::controller(AuthController::class)->group(function () {
 
 
 // Área restrita
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard'); // cria resources/views/dashboard.blade.php
-    })->name('dashboard');
-});
 
+Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+   
+});
 
 Route::middleware(['auth', 'admin'])->prefix('template')->name('template.')->group(function () {
     Route::get('/', [TemplateController::class, 'index'])->name('index');
