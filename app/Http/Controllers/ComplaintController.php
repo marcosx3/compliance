@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Complaint;
 use App\Models\Response;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class ComplaintController extends Controller
@@ -27,11 +29,30 @@ class ComplaintController extends Controller
 
     public function store(Request $request)
     {
+        $userId = null;
         $validated = $request->validate([
             'title' => 'string|max:80',
             'description' => 'required|string|max:255',
+        ]);
 
-    ]);
+        $userValidated = $request->validate([
+            'name' => ['nullable', 'string', 'max:150'],
+            'email' => ['nullable', 'string', 'email', 'max:150', 'unique:users,email'],
+            'password' => ['nullable', 'string', 'min:3'],
+        ]);
+        if (!empty($userValidated['name']) && !empty($userValidated['email']) && !empty($userValidated['password'])) {
+            // cria o usuário se os dados forem fornecidos
+            $user = User::create([
+                'name' => $userValidated['name'],
+                'email' => $userValidated['email'],
+                'password' => Hash::make($userValidated['password']),
+                'role' => 'user',
+            ]);
+            $userId = $user->id;
+        } else {
+                $userId = Auth::id();
+        }
+
         // cria a denuncia principal
         $complaint = Complaint::create([
             'protocol' => "FR" . strtoupper(Str::random(12)) . date("Ymd"),
