@@ -112,13 +112,13 @@
                     </p>
                 </div>
                 <div id="perguntas-container">
-                    <form action="{{ route('complaints.store') }}" method="post" enctype="multipart/form-data">
+                    <form id="compliantForm" action="{{ route('complaints.store') }}" method="post" enctype="multipart/form-data">
                         @csrf
                             <div class="mb-6">
                                 <label class="block text-gray-700 font-semibold mb-2">Deseja se identificar?</label>
                                 <div class="flex flex-wrap gap-4">
                                     <label class="flex items-center">
-                                        <input type="radio" name="identificar" value="sim" class="mr-2">
+                                        <input type="radio" name="identificar"  value="sim" class="mr-2">
                                         <span>Sim</span>
                                     </label>
                                     <label class="flex items-center">
@@ -132,15 +132,15 @@
                                 <div class="grid md:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-gray-700 font-semibold mb-2">Nome</label>
-                                        <input type="text" name="name" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <input type="text" name="name" id="name" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
                                     <div>
                                         <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                                        <input type="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <input type="email" name="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
                                     <div>
                                         <label class="block text-gray-700 font-semibold mb-2">Password</label>
-                                        <input type="password" name="password" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                        <input type="password" name="password" id="password" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                     </div>
                                 </div>
                             </div>
@@ -160,13 +160,13 @@
                                     </label>
                                 @switch($question['type'])
                                     @case('text')
-                                    <input type="text" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="text" id="answers[{{ $question['id'] }}]"name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
                                 @break
                                 @case('textarea')
-                                    <textarea name="answers[{{ $question['id'] }}]" rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                                    <textarea id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" rows="4" class="w-full px-4 py-2 border rounded-lg"></textarea>
                                 @break
                                 @case('select')
-                                    <select name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
+                                    <select id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
                                         <option value="">Selecione...</option>
                                         @foreach($question['options'] as $option)
                                             <option value="{{ is_array($option) ? $option['value'] : $option->value }}">
@@ -179,7 +179,7 @@
                                     <div class="flex gap-4">
                                         @foreach($question['options'] as $option)
                                             <label class="flex items-center">
-                                            <input type="radio" name="answers[{{ $question['id'] }}]" value="{{ is_array($option) ? $option['value'] : $option->value }}" class="mr-2">
+                                            <input type="radio" id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" value="{{ is_array($option) ? $option['value'] : $option->value }}" class="mr-2">
                                             {{ is_array($option) ? $option['value'] : $option->value }}
                                             </label>
                                         @endforeach
@@ -189,17 +189,17 @@
                                     <div class="flex flex-col gap-2">
                                         @foreach($question['options'] as $option)
                                             <label class="flex items-center">
-                                            <input type="checkbox" name="answers[{{ $question['id'] }}][]" value="{{ is_array($option) ? $option['value'] : $option->value }}" class="mr-2">
+                                            <input type="checkbox" id="answers[{{ $question['id'] }}][]" name="answers[{{ $question['id'] }}][]" value="{{ is_array($option) ? $option['value'] : $option->value }}" class="mr-2">
                                             {{ is_array($option) ? $option['value'] : $option->value }}
                                             </label>
                                         @endforeach
                                     </div>
                                 @break
                                 @case('file')
-                                    <input type="file" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="file" id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
                                 @break
                                 @default
-                                <input type="text" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
+                                <input type="text" id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
                         @endswitch
                         @endforeach
                     </div>
@@ -312,8 +312,29 @@
     </footer>
     {{-- JS principal --}}
    @vite('resources/js/app.js')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Overlay de carregamento -->
+<div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+    <div class="w-14 h-14 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+</div>
+<script>
+    $(function () {
+        // Quando o form é submetido → mostra overlay
+        $("#compliantForm").on("submit", function () {
+            $("#loadingOverlay").removeClass("hidden");
 
-    <!-- Script JavaScript -->
+            // desabilita botão
+            const $btn = $(this).find("button[type=submit]");
+            $btn.prop("disabled", true).text("Processando...");
+        });
+
+        // Quando a página carrega de volta → esconde overlay (ex: erro de validação)
+        $(window).on("load", function () {
+            $("#loadingOverlay").addClass("hidden");
+            $("#registerForm button[type=submit]").prop("disabled", false).text("Criar conta");
+        });
+    });
+</script>
 </body>
 
 </html>

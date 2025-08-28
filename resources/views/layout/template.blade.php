@@ -13,11 +13,15 @@
     @stack('styles')
     @stack('scripts')
 </head>
-   <header>
+<body>
+    
+    <header>
         <h1>Compliance</h1>
     </header>
-
+    
     <main>
         @yield('content')
     </main>
+</body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </html>

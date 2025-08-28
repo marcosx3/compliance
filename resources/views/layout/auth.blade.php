@@ -9,9 +9,11 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen flex items-center justify-center bg-gray-900 text-gray-100">
-    <div class="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-2xl shadow-xl">
+<body class="min-h-screen flex items-center justify-center  text-gray-100">
+    <div class="w-full max-w-md p-8 space-y-6 rounded-2xl shadow-xl" style="background-color: #ffffff;">
         @yield('content')
     </div>
+    <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

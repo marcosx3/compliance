@@ -1,6 +1,7 @@
 
  :root {
-            --primary: #1e40af;
+            /* --primary: #1e40af; */
+             --primary: #999999; 
             --secondary: #3b82f6;
             --accent: #ef4444;
             --light: #f8fafc;
@@ -14,7 +15,7 @@
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background-color: var(--primary);
         }
         
         .card-hover {

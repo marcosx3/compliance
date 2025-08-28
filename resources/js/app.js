@@ -1,4 +1,7 @@
 import './bootstrap';
+import Swal from 'sweetalert2';
+
+
  document.addEventListener('DOMContentLoaded', function() {
             // Menu mobile
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -104,3 +107,21 @@ import './bootstrap';
                 });
             });
         });
+
+
+
+// Tornar disponível globalmente
+window.Swal = Swal;
+
+// Opcional: Configurar um tema padrão
+window.Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer);
+        toast.addEventListener('mouseleave', Swal.resumeTimer);
+    }
+});
