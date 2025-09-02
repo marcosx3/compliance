@@ -3,7 +3,7 @@
 @section('content')
 <h1 class="text-2xl font-bold mb-4">Novo Formulário</h1>
 
-<form action="{{ route('template.store') }}" method="POST" class="space-y-6" >
+<form action="{{ route('template.store') }}" method="POST" class="space-y-6" enctype="multipart/form-data">
     @csrf
     <div>
         <label class="block mb-1 font-semibold">Nome do formulário</label>
@@ -46,10 +46,11 @@ function createPergunta() {
         <div>
             <label>Tipo</label>
             <select name="questions[${questionCount}][type]" class="w-full p-2 border rounded" onchange="toggleOpcoes(this, ${questionCount})">
-                <option value="TEXTO">Texto</option>
-                <option value="NUMERO">Número</option>
-                <option value="DATA">Data</option>
-                <option value="MULTIPLA_ESCOLHA">Múltipla Escolha</option>
+                <option value="file">Arquivo</option>
+                <option value="text">Texto</option>
+                <option value="number">Número</option>
+                <option value="date">Data</option>
+                <option value="select">Múltipla Escolha</option>
             </select>
         </div>
         <div>

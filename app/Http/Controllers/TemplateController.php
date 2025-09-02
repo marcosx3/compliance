@@ -44,7 +44,7 @@ class TemplateController extends Controller
             'name' => 'required|string|max:150',
             'questions' => 'required|array',
             'questions.*.text' => 'required|string|max:255',
-            'questions.*.type' => 'required|in:text,number,date,select,radio',
+            'questions.*.type' => 'required|in:file,text,number,date,select,radio',
             'questions.*.required' => 'boolean',
             'questions.*.order' => 'nullable|string|integer',
             'questions.*.options' => 'array', // só para MULTIPLA_ESCOLHA

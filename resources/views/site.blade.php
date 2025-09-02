@@ -196,7 +196,10 @@
                                     </div>
                                 @break
                                 @case('file')
-                                    <input type="file" id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
+                                    <input type="file" id="answers[{{ $question['id'] }}]" 
+                                        name="answers[{{ $question['id'] }}][]" 
+                                        class="w-full px-4 py-2 border rounded-lg"
+                                        multiple>
                                 @break
                                 @default
                                 <input type="text" id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">

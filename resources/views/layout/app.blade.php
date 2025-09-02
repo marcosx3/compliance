@@ -22,13 +22,12 @@
             </button>
         </div>
         <nav class="mt-6 space-y-2">
-            <a href="" class="block px-6 py-3 hover:bg-gray-800">📊 Dashboard</a>
-            <a href="" class="block px-6 py-3 hover:bg-gray-800">📁 Denúncias</a>
+            <a href="{{route ('dashboard.dashboard')}}" class="block px-6 py-3 hover:bg-gray-800">📊 Dashboard</a>
+            @if(auth()->user()->isAdmin())
+            <a href="{{route ('complaints.index')}}" class="block px-6 py-3 hover:bg-gray-800">📁 Denúncias</a>
             <a href="" class="block px-6 py-3 hover:bg-gray-800">⚙️ Configurações</a>
             <a href="{{route ('template.index')}}" class="block px-6 py-3 hover:bg-gray-800">⚙️ Formulários</a>
-            {{-- <a href="{{ route('dashboard') }}" class="block px-6 py-3 hover:bg-gray-800">📊 Dashboard</a>
-            <a href="{{ route('denuncias.index') }}" class="block px-6 py-3 hover:bg-gray-800">📁 Denúncias</a>
-            <a href="{{ route('config') }}" class="block px-6 py-3 hover:bg-gray-800">⚙️ Configurações</a> --}}
+            @endif
         </nav>
     </aside>
 

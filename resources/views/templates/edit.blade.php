@@ -28,10 +28,11 @@
             <div>
                 <label>Tipo</label>
                 <select name="questions[{{ $index }}][type]" class="w-full p-2 border rounded" onchange="toggleOpcoes(this, {{ $index }})">
-                    <option value="TEXTO" {{ $question->tipo=='TEXTO'?'selected':'' }}>Texto</option>
-                    <option value="NUMERO" {{ $question->tipo=='NUMERO'?'selected':'' }}>Número</option>
-                    <option value="DATA" {{ $question->tipo=='DATA'?'selected':'' }}>Data</option>
-                    <option value="MULTIPLA_ESCOLHA" {{ $question->tipo=='MULTIPLA_ESCOLHA'?'selected':'' }}>Múltipla Escolha</option>
+                    <option value="file" {{ $question->tipo=='file'?'selected':'' }}>Arquivos</option>
+                    <option value="text" {{ $question->tipo=='text'?'selected':'' }}>Texto</option>
+                    <option value="number" {{ $question->tipo=='number'?'selected':'' }}>Número</option>
+                    <option value="date" {{ $question->tipo=='date'?'selected':'' }}>Data</option>
+                    <option value="select" {{ $question->tipo=='select'?'selected':'' }}>Múltipla Escolha</option>
                 </select>
             </div>
             <div>
@@ -77,10 +78,11 @@ function createPergunta() {
         <div>
             <label>Tipo</label>
             <select name="questions[${index}][type]" class="w-full p-2 border rounded" onchange="toggleOpcoes(this, ${index})">
-                <option value="TEXTO">Texto</option>
-                <option value="NUMERO">Número</option>
-                <option value="DATA">Data</option>
-                <option value="MULTIPLA_ESCOLHA">Múltipla Escolha</option>
+                <option value="file">Arquivos</option>
+                <option value="text">Texto</option>
+                <option value="number">Número</option>
+                <option value="date">Data</option>
+                <option value="select">Múltipla Escolha</option>
             </select>
         </div>
         <div>

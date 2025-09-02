@@ -33,6 +33,10 @@ class Complaint extends Model
         return $this->hasMany(Response::class, 'complaint_id');
     }
 
+    public function compliantResponses() {
+    return $this->hasMany(ComplaintResponse::class);
+}
+
     public function historical()
     {
         return $this->hasMany(Historical::class, 'complaint_id');

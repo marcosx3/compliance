@@ -15,7 +15,7 @@ return new class extends Migration
         $table->id();
         $table->foreignId('template_id')->constrained('templates')->onDelete('cascade');
         $table->string('text', 255);
-        $table->enum('type', ['text', 'number', 'date', 'select','radio']);
+        $table->enum('type', ['file','text', 'number', 'date', 'select','radio']);
         $table->boolean('required')->default(false);
         $table->integer('order')->nullable();            
         $table->timestamps();
