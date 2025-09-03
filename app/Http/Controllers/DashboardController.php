@@ -22,13 +22,22 @@ public function index()
     if ($user->isAdmin()) {
         // Admin vê todas as denúncias
         $tot_denuncias = Complaint::count();
+
         $denuncias_status = Complaint::select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
-            ->get();
+            ->pluck('total', 'status'); // retorna array [status => total]
+
+        $denuncias_pendentes = Complaint::where('status', 'EM_ANALISE')->count();
+        $denuncias_concluidas = Complaint::where('status', 'CONCLUIDA')->count();
+
         $denuncias = Complaint::orderBy('created_at', 'desc')->paginate(10);
 
         return view('dashboard_admin', compact(
-            'tot_denuncias', 'denuncias_status', 'denuncias'
+            'tot_denuncias',
+            'denuncias_status',
+            'denuncias_pendentes',
+            'denuncias_concluidas',
+            'denuncias'
         ));
     } else {
         // Usuário vê apenas suas próprias denúncias
@@ -39,6 +48,7 @@ public function index()
         return view('dashboard_user', compact('denuncias'));
     }
 }
+
 
 
 }

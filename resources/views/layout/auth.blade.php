@@ -10,7 +10,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen flex items-center justify-center  text-gray-100">
-    <div class="w-full max-w-md p-8 space-y-6 rounded-2xl shadow-xl" style="background-color: #ffffff;">
+    <div class="w-full max-w-md p-8 space-y-6 rounded-2xl shadow-xl" >
         @yield('content')
     </div>
     <!-- jQuery -->

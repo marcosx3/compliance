@@ -173,4 +173,17 @@ class ComplaintController extends Controller
         return redirect()->back()->with('success', 'Denúncia atualizada com sucesso!');
     }
 
+
+    public function consulta(Request $request)
+    {
+        $protocol = $request->input('protocol');
+        
+        $complaint = null;
+        if (!empty($protocol) ) {
+            $complaint = Complaint::where('protocol', $protocol)->first();
+            return view('compliant.consulta', compact('complaint', 'protocol'));
+        }
+        return view("site");
+    }
+
 }

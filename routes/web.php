@@ -14,6 +14,8 @@ use App\Http\Controllers\TemplateController;
 // });
 
 Route::get('/', [SiteController::class,'index']); // rota pública
+// Consulta pública pelo protocolo
+Route::get('/consulta', [ComplaintController::class, 'consulta'])->name('complaints.consulta');
 
 Route::controller(AuthController::class)->group(function () {
     // Login

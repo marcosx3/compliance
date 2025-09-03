@@ -225,19 +225,20 @@
                 </div>
 
                 <div class="max-w-2xl mx-auto">
-                    <div class="bg-white rounded-xl shadow-md p-4 sm:p-6 md:p-8">
-                        <div class="mb-6">
-                            <label class="block text-gray-700 font-semibold mb-2">Número do Protocolo</label>
-                            <input type="text" placeholder="Ex: DN20240001"
-                                class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <form action="{{ route('complaints.consulta') }}" method="get">
+                        <div class="bg-white rounded-xl shadow-md p-4 sm:p-6 md:p-8">
+                            <div class="mb-6">
+                                <label class="block text-gray-700 font-semibold mb-2">Número do Protocolo</label>
+                                <input type="text" name="protocol" placeholder="Ex: DN20240001"
+                                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <button id="consultar-btn" type="submit"
+                                class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                                <i class="fas fa-search mr-2"></i>Consultar Status
+                            </button>
                         </div>
-                        <button id="consultar-btn"
-                            class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-                            <i class="fas fa-search mr-2"></i>Consultar Status
-                        </button>
-                    </div>
-
-                    <div id="status-result" class="mt-8 hidden">
+                    </form>
+                    {{-- <div id="status-result" class="mt-8 hidden">
                         <div class="bg-white rounded-xl shadow-md p-4 sm:p-6">
                             <div class="flex items-center justify-between mb-4 flex-col sm:flex-row gap-2">
                                 <h3 class="text-xl font-semibold">Status da Denúncia</h3>
@@ -271,7 +272,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </section>

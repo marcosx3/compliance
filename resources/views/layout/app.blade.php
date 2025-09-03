@@ -40,7 +40,7 @@
             </button>
             <h2 class="text-lg font-semibold">{{ $title ?? 'Painel' }}</h2>
             <div class="flex items-center space-x-4">
-                <span>{{ auth()->user()->nome ?? 'Usuário' }}</span>
+                <span>{{ auth()->user()->name ?? 'Usuário' }}</span>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button class="text-red-500 hover:underline">Sair</button>
