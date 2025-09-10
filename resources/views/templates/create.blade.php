@@ -68,7 +68,7 @@ function createPergunta() {
 
 function toggleOpcoes(select, id) {
     const container = document.getElementById(`opcoes-container-${id}`);
-    container.classList.toggle('hidden', select.value !== 'MULTIPLA_ESCOLHA');
+    container.classList.toggle('hidden', select.value !== 'select');
 }
 
 function addOpcao(id) {

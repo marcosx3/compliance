@@ -53,6 +53,7 @@
             @yield('content')
         </main>
     </div>
+    @include('components.flash')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Script -->
     <script>

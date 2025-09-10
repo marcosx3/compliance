@@ -46,9 +46,9 @@ Route::middleware(['auth', 'admin'])->prefix('template')->name('template.')->gro
 });
 
 //Denuncias
+Route::post('/complaints', [ComplaintController::class, 'store'])->name('complaints.store');
 Route::middleware(['auth'])->prefix('complaints')->name('complaints.')->group(function () {
     Route::get('/', [ComplaintController::class, 'index'])->name('index');
-    Route::post('/complaints', [ComplaintController::class, 'store'])->name('store');
     Route::get('/complaints/{id}', [ComplaintController::class, 'show'])->name('show');
     Route::post('/complaints/{id}', [ComplaintController::class, 'update'])->name('update');
 });

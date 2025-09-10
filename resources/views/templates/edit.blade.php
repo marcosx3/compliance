@@ -28,11 +28,11 @@
             <div>
                 <label>Tipo</label>
                 <select name="questions[{{ $index }}][type]" class="w-full p-2 border rounded" onchange="toggleOpcoes(this, {{ $index }})">
-                    <option value="file" {{ $question->tipo=='file'?'selected':'' }}>Arquivos</option>
-                    <option value="text" {{ $question->tipo=='text'?'selected':'' }}>Texto</option>
-                    <option value="number" {{ $question->tipo=='number'?'selected':'' }}>Número</option>
-                    <option value="date" {{ $question->tipo=='date'?'selected':'' }}>Data</option>
-                    <option value="select" {{ $question->tipo=='select'?'selected':'' }}>Múltipla Escolha</option>
+                    <option value="file" {{ $question->type=='file'?'selected':'' }}>Arquivos</option>
+                    <option value="text" {{ $question->type=='text'?'selected':'' }}>Texto</option>
+                    <option value="number" {{ $question->type=='number'?'selected':'' }}>Número</option>
+                    <option value="date" {{ $question->type=='date'?'selected':'' }}>Data</option>
+                    <option value="select" {{ $question->type=='select'?'selected':'' }}>Múltipla Escolha</option>
                 </select>
             </div>
             <div>
@@ -40,7 +40,7 @@
                     <input type="checkbox" name="questions[{{ $index }}][required]" {{ $question->obrigatoria?'checked':'' }}> Obrigatória
                 </label>
             </div>
-            <div id="opcoes-container-{{ $index }}" class="space-y-1 {{ $question->type != 'MULTIPLA_ESCOLHA' ? 'hidden' : '' }}">
+            <div id="opcoes-container-{{ $index }}" class="space-y-1 {{ $question->type != 'select' ? 'hidden' : '' }}">
                 @foreach($question->options as $oIndex => $option)
                 <input type="text" name="questions[{{ $index }}][opcoes][]" value="{{ $option->valor }}" class="w-full p-2 border rounded mt-1">
                 @endforeach
@@ -52,7 +52,7 @@
 
     <button type="button" id="add-pergunta" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600">Adicionar Pergunta</button>
 
-    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-500">Atualizar Formulário</button>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-500">Atualizar Formulário</button>
 </form>
 
 <script>
@@ -100,7 +100,7 @@ function createPergunta() {
 
 function toggleOpcoes(select, id) {
     const container = document.getElementById(`opcoes-container-${id}`);
-    container.classList.toggle('hidden', select.value !== 'MULTIPLA_ESCOLHA');
+    container.classList.toggle('hidden', select.value !== 'select');
 }
 
 function addOpcao(id) {

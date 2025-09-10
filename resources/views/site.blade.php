@@ -15,7 +15,7 @@
     @stack('scripts')
 </head>
 
-<body class="min-h-screen">
+<body class="min-h-screen ">
     <!-- Navigation -->
     <nav class="gradient-bg text-white shadow-lg fixed w-full top-0 z-50">
         <div class="container mx-auto px-4 py-3">
@@ -152,8 +152,7 @@
                                 <label class="block text-gray-700 font-semibold mb-2" for="title"> Descrição </label>
                                 <input type="text" name="description" id="description" class="w-full px-4 py-2 border rounded-lg">
                             </div>
-
-                        @foreach($activeForm->questions as $question)
+                        @foreach($activeForm->questions ?? [] as $question)
                             <div class="mb-4">
                                     <label class="block text-gray-700 font-semibold mb-2">
                                         {{ $question['text'] }}
@@ -196,10 +195,11 @@
                                     </div>
                                 @break
                                 @case('file')
-                                    <input type="file" id="answers[{{ $question['id'] }}]" 
-                                        name="answers[{{ $question['id'] }}][]" 
-                                        class="w-full px-4 py-2 border rounded-lg"
-                                        multiple>
+                                <input type="file" 
+                                    name="answers[{{ $question['id'] }}][]" 
+                                    class="w-full px-4 py-2 border rounded-lg"
+                                    multiple>
+
                                 @break
                                 @default
                                 <input type="text" id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
@@ -321,7 +321,7 @@
 <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
     <div class="w-14 h-14 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
 </div>
-<script>
+{{-- <script>
     $(function () {
         // Quando o form é submetido → mostra overlay
         $("#compliantForm").on("submit", function () {
@@ -338,7 +338,7 @@
             $("#registerForm button[type=submit]").prop("disabled", false).text("Criar conta");
         });
     });
-</script>
+</script> --}}
 </body>
 
 </html>

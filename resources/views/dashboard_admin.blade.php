@@ -35,63 +35,6 @@
                 </div>
             </div>
 
-            <!-- Gestão de Perguntas -->
-            <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6 mb-8">
-                <h3 class="text-xl font-semibold mb-4">Gestão de Perguntas do Formulário</h3>
-
-                <div class="mb-6">
-                    <button
-                        class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition text-sm sm:text-base">
-                        <i class="fas fa-plus mr-2"></i>Nova Pergunta
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full bg-white rounded-lg overflow-hidden responsive-table">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-4 py-3 text-left">Pergunta</th>
-                                <th class="px-4 py-3 text-left">Tipo</th>
-                                <th class="px-4 py-3 text-left">Status</th>
-                                <th class="px-4 py-3 text-left">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b">
-                                <td class="px-4 py-3" data-label="Pergunta">Setor/Área relacionada</td>
-                                <td class="px-4 py-3" data-label="Tipo">Dropdown</td>
-                                <td class="px-4 py-3" data-label="Status">
-                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Ativa</span>
-                                </td>
-                                <td class="px-4 py-3" data-label="Ações">
-                                    <button class="text-blue-600 hover:text-blue-800 mr-2">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-800">
-                                        <i class="fas fa-ban"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="px-4 py-3" data-label="Pergunta">Tipo de irregularidade</td>
-                                <td class="px-4 py-3" data-label="Tipo">Checkbox</td>
-                                <td class="px-4 py-3" data-label="Status">
-                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">Ativa</span>
-                                </td>
-                                <td class="px-4 py-3" data-label="Ações">
-                                    <button class="text-blue-600 hover:text-blue-800 mr-2">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-800">
-                                        <i class="fas fa-ban"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             <!-- Lista de Denúncias -->
             <div class="bg-gray-50 rounded-xl shadow-md p-4 sm:p-6">
                 <h3 class="text-xl font-semibold mb-4">Denúncias Recebidas</h3>

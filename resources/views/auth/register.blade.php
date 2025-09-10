@@ -1,7 +1,9 @@
 @extends('layout.auth')
 
 @section('content')
-<h1 class="text-2xl font-bold text-center" style="color:#5d596c;">Cadastro</h1>
+    <div class="flex items-center justify-center p-3 ">
+        <img src="{{ asset('logo-fractal-claro.png') }}" alt="logo fractal claro" class="h-10">
+    </div>
 <form id="registerForm" method="POST" action="{{ route('register') }}" class="mt-6 space-y-4">
     @csrf
     <div>
@@ -13,19 +15,19 @@
     <div>
         <label for="email" class="block text-sm font-medium " style="color:#5d596c;">E-mail</label>
         <input type="email" name="email" id="email" required
-            class="w-full mt-1 p-3 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder-black">
+             class="w-full mt-1 p-3 rounded-xl bg-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 text-gray-900 placeholder-gray-700">
     </div>
 
     <div>
         <label for="password" class="block text-sm font-medium " style="color:#5d596c;">Senha</label>
         <input type="password" name="password" id="password" required
-            class="w-full mt-1 p-3 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder-black">
+            class="w-full mt-1 p-3 rounded-xl bg-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 text-gray-900 placeholder-gray-700">
     </div>
 
     <div>
         <label for="password_confirmation" class="block text-sm font-medium " style="color:#5d596c;">Confirmar Senha</label>
         <input type="password" name="password_confirmation" id="password_confirmation" required
-            class="w-full mt-1 p-3 rounded-xl border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 text-black placeholder-black">
+            class="w-full mt-1 p-3 rounded-xl bg-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 text-gray-900 placeholder-gray-700">
     </div>
 
     <button type="submit"

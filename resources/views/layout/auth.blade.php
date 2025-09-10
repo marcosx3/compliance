@@ -9,7 +9,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen flex items-center justify-center  text-gray-100">
+<body class="min-h-screen flex items-center justify-center  text-gray-100  bg-cover bg-center bg-no-repeat bg-fixed" style="background-image: url('prospen-fundo-claro.jpg');">
     <div class="w-full max-w-md p-8 space-y-6 rounded-2xl shadow-xl" >
         @yield('content')
     </div>

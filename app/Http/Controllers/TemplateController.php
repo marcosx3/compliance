@@ -6,6 +6,7 @@ use App\Models\OptionQuestion;
 use App\Models\Question;
 use App\Models\Template;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TemplateController extends Controller
 {
@@ -55,7 +56,7 @@ class TemplateController extends Controller
             'name' => $data['name'],
             'status' => true,
         ]);
-
+        Log::info('Template criado: ', ['template_id' => $template->id, 'name' => $template->name]);
         foreach ($data['questions'] as $order => $p) {
             $question = Question::create([
                 'template_id' => $template->id,
@@ -73,6 +74,7 @@ class TemplateController extends Controller
                     ]);
                 }
             }
+            Log::info('  Question criada: ', ['question_id' => $question->id, 'text' => $question->text, 'type' => $question->type]);
         }
         
         return redirect()->route('template.index')->with('success', 'Formulário criado com sucesso!');
@@ -92,7 +94,48 @@ class TemplateController extends Controller
     }
 
 
-    public function update() {}
+ public function update(Request $request, Template $template)
+{
+    
+    $data = $request->validate([
+        'name' => 'required|string|max:150',
+        'questions' => 'required|array',
+        'questions.*.text' => 'required|string|max:255',
+        'questions.*.type' => 'required|in:file,text,number,date,select,radio',
+        'questions.*.required' => 'boolean',
+        'questions.*.order' => 'nullable|integer',
+        'questions.*.opcoes' => 'array', // só para múltipla escolha
+    ]);
+
+    // Atualiza apenas esse template para "ativo"
+    Template::query()->update(['status' => false]);
+    $template->update([
+        'name' => $data['name'],
+        'status' => true,
+    ]);
+    Log::info('Template atualizado: ', ['template_id' => $template->id, 'name' => $template->name]);
+    // Remove perguntas antigas (cascade apaga opções se FK estiver configurada)
+    $template->questions()->delete();
+
+    foreach ($data['questions'] as $order => $p) {
+        $question = $template->questions()->create([
+            'text' => $p['text'],
+            'type' => $p['type'],
+            'required' => $p['required'] ?? false,
+            'order' => $p['order'] ?? $order,
+        ]);
+
+        if ($p['type'] === 'select' && !empty($p['opcoes'])) {
+            foreach ($p['opcoes'] as $op) {
+                $question->options()->create([
+                    'value' => $op,
+                ]);
+            }
+        }
+    }
+
+    return redirect()->route('template.index')->with('success', 'Formulário atualizado com sucesso!');
+}
 
     /**
      * Exclui formulario

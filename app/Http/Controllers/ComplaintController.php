@@ -8,7 +8,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class ComplaintController extends Controller
 {
@@ -39,8 +42,10 @@ class ComplaintController extends Controller
     public function store(Request $request)
     {
         $userId = null;
+
+        // Validação dos campos principais
         $validated = $request->validate([
-            'title' => 'string|max:80',
+            'title' => 'nullable|string|max:80',
             'description' => 'required|string|max:255',
         ]);
 
@@ -50,6 +55,7 @@ class ComplaintController extends Controller
             'password' => ['nullable', 'string', 'min:3'],
         ]);
 
+        // Criação do usuário (se fornecido)
         if (!empty($userValidated['name']) && !empty($userValidated['email']) && !empty($userValidated['password'])) {
             $user = User::create([
                 'name' => $userValidated['name'],
@@ -62,74 +68,83 @@ class ComplaintController extends Controller
             $userId = Auth::id();
         }
 
-        // cria a denuncia principal
-        $complaint = Complaint::create([
-            'protocol'   => "FR" . strtoupper(Str::random(12)) . date("Ymd"),
-            'user_id'    => $userId,
-            'title'      => $validated["title"],
-            'description'=> $validated["description"],
-        ]);
+        try {
+            // Criação da denúncia principal
+            $complaint = Complaint::create([
+                'protocol' => "FR" . strtoupper(Str::random(12)) . date("Ymd"),
+                'user_id' => $userId,
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+            ]);
 
-        $answers = $request->input('answers', []);
+            // Garante que a pasta exista
+            Storage::disk('public')->makeDirectory('complaints_files');
 
-        foreach ($answers as $questionId => $answer) {
-
-            // 🔹 Caso seja upload de arquivo(s)
-            if ($request->hasFile("answers.$questionId")) {
-                $files = $request->file("answers.$questionId");
-
-                // Se for múltiplo, $files é array. Se for único, é UploadedFile.
-                if (!is_array($files)) {
-                    $files = [$files];
-                }
-
-                foreach ($files as $file) {
-                    $path = $file->store('complaints_files', 'public');
-
+            // ------------------------------
+            // 1) Respostas de texto e opções
+            // ------------------------------
+            foreach ($request->input('answers', []) as $questionId => $answer) {
+                // Texto simples (input, textarea, select, radio)
+                if (is_string($answer) && !empty($answer)) {
                     Response::create([
-                        'complaint_id'       => $complaint->id,
-                        'question_id'        => $questionId,
-                        'text_response'      => $path, // caminho do arquivo
+                        'complaint_id' => $complaint->id,
+                        'question_id' => $questionId,
+                        'text_response' => $answer,
                         'response_option_id' => null,
                     ]);
                 }
-            }
-
-            // 🔹 Caso seja checkbox (múltiplos valores)
-            elseif (is_array($answer)) {
-                foreach ($answer as $optionId) {
-                    Response::create([
-                        'complaint_id'       => $complaint->id,
-                        'question_id'        => $questionId,
-                        'text_response'      => null,
-                        'response_option_id' => $optionId,
-                    ]);
+                // Checkbox (array de opções)
+                elseif (is_array($answer) && !empty($answer) && is_string($answer[0] ?? null)) {
+                    foreach ($answer as $optionId) {
+                        if (is_numeric($optionId) && \App\Models\OptionQuestion::where('id', $optionId)->exists()) {
+                            Response::create([
+                                'complaint_id' => $complaint->id,
+                                'question_id' => $questionId,
+                                'text_response' => null,
+                                'response_option_id' => $optionId,
+                            ]);
+                        }
+                    }
                 }
             }
 
-            // 🔹 Caso seja radio/select (1 valor só → option_id)
-            elseif (is_numeric($answer)) {
-                Response::create([
-                    'complaint_id'       => $complaint->id,
-                    'question_id'        => $questionId,
-                    'text_response'      => null,
-                    'response_option_id' => $answer,
-                ]);
+            // ------------------------------
+            // 2) Respostas de arquivos
+            // ------------------------------
+            foreach ($request->file('answers', []) as $questionId => $files) {
+                foreach ((array) $files as $file) {
+                    if ($file instanceof \Illuminate\Http\UploadedFile) {
+                        $path = $file->store('complaints_files', 'public');
+
+                        Response::create([
+                            'complaint_id' => $complaint->id,
+                            'question_id' => $questionId,
+                            'text_response' => $path, // salva o caminho do arquivo
+                            'response_option_id' => null,
+                        ]);
+                    }
+                }
             }
 
-            // 🔹 Caso seja texto/textarea
-            else {
-                Response::create([
-                    'complaint_id'       => $complaint->id,
-                    'question_id'        => $questionId,
-                    'text_response'      => $answer,
-                    'response_option_id' => null,
-                ]);
-            }
+            // Log para auditoria
+            Log::info($userId ? "Denúncia registrada" : "Denúncia registrada por usuário anônimo", [
+                'complaint_id' => $complaint->id,
+                'user_id' => $userId,
+                'protocol' => $complaint->protocol,
+            ]);
+
+        } catch (\Throwable $th) {
+            throw $th;
         }
 
         return redirect()->back()->with('success', 'Denúncia registrada com sucesso!');
-}
+    }
+
+
+
+
+
+
 
 
     /**
@@ -169,7 +184,7 @@ class ComplaintController extends Controller
                 'user_id' => Auth::id(), // quem respondeu
             ]);
         }
-
+        Log::info("Denúncia atualizada: ", ['complaint_id' => $complaint->id, 'status' => $complaint->status]);
         return redirect()->back()->with('success', 'Denúncia atualizada com sucesso!');
     }
 

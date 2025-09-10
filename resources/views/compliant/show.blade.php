@@ -28,6 +28,7 @@
                     @if($complaint->status == 'ABERTA') bg-yellow-100 text-yellow-800
                     @elseif($complaint->status == 'EM_ANALISE') bg-blue-100 text-blue-800
                     @elseif($complaint->status == 'CONCLUIDA') bg-green-100 text-green-800
+                    @elseif($complaint->status == 'ARQUIVADA') bg-green-100 text-green-800
                     @endif">
                     {{ $complaint->status }}
                 </span>
@@ -86,6 +87,7 @@
                     <option value="ABERTA" {{ $complaint->status == 'ABERTA' ? 'selected' : '' }}>Aberta</option>
                     <option value="EM_ANALISE" {{ $complaint->status == 'EM_ANALISE' ? 'selected' : '' }}>Em Análise</option>
                     <option value="CONCLUIDA" {{ $complaint->status == 'CONCLUIDA' ? 'selected' : '' }}>Concluída</option>
+                    <option value="ARQUIVADA" {{ $complaint->status == 'ARQUIVADA' ? 'selected' : '' }}>Arquivada</option>
                 </select>
             </div>
 
