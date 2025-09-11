@@ -64,6 +64,20 @@
 
     <!-- Main Content -->
     <main class="pt-16">
+        @if(session('success'))
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Denúncia registrada!',
+                        html: 'Protocolo: <strong>{{ session('protocol') }}</strong>',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            </script>
+        @endif
+
         <!-- Hero Section -->
         <section id="home" class="py-16 md:py-24">
             <div class="container mx-auto px-4">

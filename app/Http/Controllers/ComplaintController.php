@@ -134,18 +134,15 @@ class ComplaintController extends Controller
             ]);
 
         } catch (\Throwable $th) {
-            throw $th;
+            Log::error('Erro ao registrar denúncia', ['error' => $th->getMessage()]);
+             return redirect()->back()->with('error', 'Erro ao registrar a denúncia!');
         }
 
-        return redirect()->back()->with('success', 'Denúncia registrada com sucesso!');
+        return redirect()->back()->with([
+            'success' => 'Denúncia registrada com sucesso! Guarde esse protocolo, pois é único.',
+            'protocol' => $complaint->protocol,
+        ]);    
     }
-
-
-
-
-
-
-
 
     /**
      * Summary of show
