@@ -238,41 +238,6 @@
                             </button>
                         </div>
                     </form>
-                    {{-- <div id="status-result" class="mt-8 hidden">
-                        <div class="bg-white rounded-xl shadow-md p-4 sm:p-6">
-                            <div class="flex items-center justify-between mb-4 flex-col sm:flex-row gap-2">
-                                <h3 class="text-xl font-semibold">Status da Denúncia</h3>
-                                <span
-                                    class="status-pending px-3 py-1 rounded-full text-sm font-semibold">Pendente</span>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="flex justify-between flex-col sm:flex-row gap-2">
-                                    <span class="text-gray-600">Protocolo:</span>
-                                    <span class="font-semibold">DN20240001</span>
-                                </div>
-                                <div class="flex justify-between flex-col sm:flex-row gap-2">
-                                    <span class="text-gray-600">Data:</span>
-                                    <span class="font-semibold">15/01/2024</span>
-                                </div>
-                                <div class="flex justify-between flex-col sm:flex-row gap-2">
-                                    <span class="text-gray-600">Categoria:</span>
-                                    <span class="font-semibold">Conduta Inadequada</span>
-                                </div>
-                            </div>
-                            <div class="mt-6 pt-4 border-t">
-                                <h4 class="font-semibold mb-2">Últimas Atualizações:</h4>
-                                <div class="space-y-2">
-                                    <div class="flex items-start">
-                                        <div class="w-3 h-3 bg-blue-500 rounded-full mt-1 mr-3"></div>
-                                        <div>
-                                            <p class="text-sm font-semibold">Denúncia recebida</p>
-                                            <p class="text-xs text-gray-500">15/01/2024 14:30</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                 </div>
             </div>
         </section>

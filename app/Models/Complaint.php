@@ -33,9 +33,9 @@ class Complaint extends Model
         return $this->hasMany(Response::class, 'complaint_id');
     }
 
-    public function compliantResponses() {
-    return $this->hasMany(ComplaintResponse::class);
-}
+    public function complaintResponses() {
+        return $this->hasMany(ComplaintResponse::class,'complaint_id');
+    }
 
     public function historical()
     {

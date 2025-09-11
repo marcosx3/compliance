@@ -172,7 +172,7 @@ class ComplaintController extends Controller
             'status' => 'required|in:ABERTA,EM_ANALISE,CONCLUIDA',
             'response' => 'nullable|string|max:5000',
         ]);
-
+        $userID = null;
         // Atualiza status da denúncia
         $complaint->status = $validated['status'];
         $complaint->save();
@@ -187,6 +187,31 @@ class ComplaintController extends Controller
         Log::info("Denúncia atualizada: ", ['complaint_id' => $complaint->id, 'status' => $complaint->status]);
         return redirect()->back()->with('success', 'Denúncia atualizada com sucesso!');
     }
+
+   
+    public function comment(Request $request, $id)
+    {
+        $complaint = Complaint::findOrFail($id);
+
+        $validated = $request->validate([
+            'response' => 'required|string|max:5000',
+        ]);
+
+        try {
+            $complaint->complaintResponses()->create([
+                // 'complaint_id' => $complaint->id,
+                'response' => $validated['response'],
+                'user_id' => Auth::id(), // se logado, salva, senão fica null
+            ]);
+
+            return redirect()->back()->with('success', 'Comentário enviado com sucesso!');
+
+        } catch (\Throwable $th) {
+            throw $th;
+            return redirect()->back()->with('info', 'Comentário não enviado!');
+        }
+    }
+
 
 
     public function consulta(Request $request)
