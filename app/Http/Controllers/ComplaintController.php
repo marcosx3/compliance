@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdminComplaintCommentMail;
+use App\Mail\AdminComplaintRegisteredMail;
+use App\Mail\AdminComplaintUpdatedMail;
+use App\Mail\ComplaintCommentMail;
+use App\Mail\ComplaintUpdatedMail;
 use App\Models\Complaint;
 use App\Models\Response;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use App\Mail\ComplaintRegisteredMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+
+use function Illuminate\Log\log;
 
 class ComplaintController extends Controller
 {
@@ -47,6 +57,7 @@ class ComplaintController extends Controller
         $validated = $request->validate([
             'title' => 'nullable|string|max:80',
             'description' => 'required|string|max:255',
+            'compliance_juridico' => 'nullable|in:S,N|max:2',
         ]);
 
         $userValidated = $request->validate([
@@ -67,19 +78,20 @@ class ComplaintController extends Controller
         } else {
             $userId = Auth::id();
         }
-
         try {
+            DB::beginTransaction();
             // Criação da denúncia principal
             $complaint = Complaint::create([
                 'protocol' => "FR" . strtoupper(Str::random(12)) . date("Ymd"),
                 'user_id' => $userId,
                 'title' => $validated['title'],
                 'description' => $validated['description'],
+                'compliance_juridico' => $validated['compliance_juridico'],
             ]);
 
             // Garante que a pasta exista
             Storage::disk('public')->makeDirectory('complaints_files');
-
+            
             // ------------------------------
             // 1) Respostas de texto e opções
             // ------------------------------
@@ -125,7 +137,58 @@ class ComplaintController extends Controller
                     }
                 }
             }
+            DB::commit();
+            log("Denúncia criada com sucesso: " . $complaint->protocol);
+            //  E-mail para o usuário (se existir)
+            if ($complaint->user && $complaint->user->email) {
+                $data["emailDenunciante"] = $complaint->user->email;
+                $data["NomeDenunciante"] = $complaint->user->name;
+                $data["protocol"] = $complaint->protocol;
+                $data["title"] = $complaint->title;
+                $data["description"] = $complaint->description;
 
+                if ( !empty($data["emailDenunciante"])) {
+                    Mail::to($complaint->user->email)
+                        ->queue(new ComplaintRegisteredMail($data));
+                }
+            }
+
+            if ($validated["compliance_juridico"] == 'N') {
+                //  E-mail para administradores
+                $admins = User::where('role', 'admin')->get();
+                
+                foreach ($admins as $admin) {
+                    if ($admin->email) {
+                        $data["emailAdmin"] = $admin->email;
+                        $data["NomeAdmin"] = $admin->name;
+                        $data["protocol"] = $complaint->protocol;
+                        $data["title"] = $complaint->title;
+                        $data["description"] = $complaint->description;
+                        
+                        if ( !empty($data["emailAdmin"]) ) {
+                        Mail::to($admin->email)
+                            ->queue(new AdminComplaintRegisteredMail($data));
+                            Log::info("Email enviado para admin: " . $admin->email);
+                        }
+                    }
+                }
+            } else {
+                // Email para o moderador
+                $moderador = User::where('role', 'moderator')->first();
+                if ($moderador && $moderador->email) {
+                    $data["emailAdmin"] = $moderador->email;
+                    $data["NomeAdmin"] = $moderador->name;
+                    $data["protocol"] = $complaint->protocol;
+                    $data["title"] = $complaint->title;
+                    $data["description"] = $complaint->description;
+                    
+                    if ( !empty($data["emailAdmin"]) ) {
+                        Mail::to($moderador->email)
+                            ->queue(new AdminComplaintRegisteredMail($data));
+                        Log::info("Email enviado para admin: " . $moderador->email);
+                    }
+                }
+            }
             // Log para auditoria
             Log::info($userId ? "Denúncia registrada" : "Denúncia registrada por usuário anônimo", [
                 'complaint_id' => $complaint->id,
@@ -134,8 +197,9 @@ class ComplaintController extends Controller
             ]);
 
         } catch (\Throwable $th) {
+            DB::rollBack();
             Log::error('Erro ao registrar denúncia', ['error' => $th->getMessage()]);
-             return redirect()->back()->with('error', 'Erro ao registrar a denúncia!');
+            return redirect()->back()->with('error', 'Erro ao registrar a denúncia!');
         }
 
         return redirect()->back()->with([
@@ -170,19 +234,81 @@ class ComplaintController extends Controller
             'response' => 'nullable|string|max:5000',
         ]);
         $userID = null;
-        // Atualiza status da denúncia
-        $complaint->status = $validated['status'];
-        $complaint->save();
+        try {
+            DB::beginTransaction();
+            // Atualiza status da denúncia
+            $complaint->status = $validated['status'];
+            $complaint->save();
 
-        // Se tiver resposta, cria um novo registro em complaint_responses
-        if (!empty($validated['response'])) {
-            $complaint->responses()->create([
-                'response' => $validated['response'],
-                'user_id' => Auth::id(), // quem respondeu
-            ]);
+            // Se tiver resposta, cria um novo registro em complaint_responses
+            if (!empty($validated['response'])) {
+                $complaint->responses()->create([
+                    'response' => $validated['response'],
+                    'user_id' => Auth::id(), // quem respondeu
+                ]);
+            }   
+            DB::commit();
+
+            // 1. Dono da denúncia
+            if ($complaint->user && $complaint->user->email) {
+                $data = [
+                    "emailDenunciante" => $complaint->user->email,
+                    "NomeDenunciante"  => $complaint->user->name,
+                    "protocol"         => $complaint->protocol,
+                    "title"            => $complaint->title,
+                    "description"      => $complaint->description,
+                    "status"           => $complaint->status,
+                ];
+                Mail::to($complaint->user->email)
+                    ->queue(new ComplaintUpdatedMail($data));
+            }
+            // 2. Administradores
+            if ($complaint->compliance === 'S') {
+                // Exemplo: enviar para o jurídico
+                $juridicos = User::where('role', 'moderator')->get();
+
+                foreach ($juridicos as $juridico) {
+                    if ($juridico->email) {
+                        $data = [
+                            "emailJuridico" => $juridico->email,
+                            "NomeJuridico"  => $juridico->name,
+                            "protocol"      => $complaint->protocol,
+                            "title"         => $complaint->title,
+                            "description"   => $complaint->description,
+                            "status"        => $complaint->status,
+                        ];
+
+                        Mail::to($juridico->email)
+                            ->queue(new ComplaintRegisteredMail($data));
+                        Log::info("Email enviado para o Moderador: " . $juridico->email);
+                    }
+                }
+            } else {
+                // Senão, envia para admins
+                $admins = User::where('role', 'admin')->get();
+                foreach ($admins as $admin) {
+                    if ($admin->email) {
+                        $data = [
+                            "emailAdmin" => $admin->email,
+                            "NomeAdmin"  => $admin->name,
+                            "protocol"   => $complaint->protocol,
+                            "title"      => $complaint->title,
+                            "description"=> $complaint->description,
+                            "status"     => $complaint->status,
+                        ];
+                        Mail::to($admin->email)
+                            ->queue(new AdminComplaintUpdatedMail($data));
+                        Log::info("Email enviado para admin: " . $admin->email);
+                    }
+                }
+            }
+            return redirect()->back()->with('success', 'Denúncia atualizada com sucesso!');
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error('Erro ao atualizar denúncia', ['error' => $th->getMessage()]);
+            return redirect()->back()->with('error', 'Erro ao atualizar a denúncia!');
         }
-        Log::info("Denúncia atualizada: ", ['complaint_id' => $complaint->id, 'status' => $complaint->status]);
-        return redirect()->back()->with('success', 'Denúncia atualizada com sucesso!');
     }
 
    
@@ -195,17 +321,72 @@ class ComplaintController extends Controller
         ]);
 
         try {
+            DB::beginTransaction();
             $complaint->complaintResponses()->create([
                 // 'complaint_id' => $complaint->id,
                 'response' => $validated['response'],
                 'user_id' => Auth::id(), // se logado, salva, senão fica null
             ]);
+            DB::commit();
+            // 1. Dono da denúncia
+            if ($complaint->user && $complaint->user->email) {
+                $data = [
+                    "emailDenunciante" => $complaint->user->email,
+                    "NomeDenunciante"  => $complaint->user->name,
+                    "protocol"         => $complaint->protocol,
+                    "title"            => $complaint->title,
+                    "description"      => $complaint->description,
+                    "status"           => $complaint->status,
+                ];
+                Mail::to($complaint->user->email)
+                    ->queue(new ComplaintCommentMail($data));
+            }
+            // 2. Administradores
+            if ($complaint->compliance === 'S') {
+                // Exemplo: enviar para o jurídico
+                $juridicos = User::where('role', 'moderator')->get();
 
+                foreach ($juridicos as $juridico) {
+                    if ($juridico->email) {
+                        $data = [
+                            "emailJuridico" => $juridico->email,
+                            "NomeJuridico"  => $juridico->name,
+                            "protocol"      => $complaint->protocol,
+                            "title"         => $complaint->title,
+                            "description"   => $complaint->description,
+                            "status"        => $complaint->status,
+                        ];
+
+                        Mail::to($juridico->email)
+                            ->queue(new ComplaintCommentMail($data));
+                        Log::info("Email enviado para o Moderador: " . $juridico->email);
+                    }
+                }
+            } else {
+                // Senão, envia para admins
+                $admins = User::where('role', 'admin')->get();
+                foreach ($admins as $admin) {
+                    if ($admin->email) {
+                        $data = [
+                            "emailAdmin" => $admin->email,
+                            "NomeAdmin"  => $admin->name,
+                            "protocol"   => $complaint->protocol,
+                            "title"      => $complaint->title,
+                            "description"=> $complaint->description,
+                            "status"     => $complaint->status,
+                        ];
+                        Mail::to($admin->email)
+                            ->queue(new AdminComplaintCommentMail($data));
+                        Log::info("Email enviado para admin: " . $admin->email);
+                    }
+                }
+            }
             return redirect()->back()->with('success', 'Comentário enviado com sucesso!');
 
         } catch (\Throwable $th) {
-            throw $th;
-            return redirect()->back()->with('info', 'Comentário não enviado!');
+            DB::rollBack();
+            Log::error('Erro ao enviar comentário', ['error' => $th->getMessage()]);
+            return redirect()->back()->with('error', 'Comentário não enviado!');
         }
     }
 

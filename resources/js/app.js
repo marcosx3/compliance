@@ -4,29 +4,7 @@ import Swal from 'sweetalert2';
 
  document.addEventListener('DOMContentLoaded', function() {
             // Menu mobile
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            // const mobileLoginBtn = document.getElementById('mobile-login-btn');
-            
-            mobileMenuBtn.addEventListener('click', function() {
-                mobileMenu.classList.toggle('open');
-            });
-
-            // mobileLoginBtn.addEventListener('click', function() {
-            //     const isLoggedIn = confirm('Simulação: Deseja fazer login como administrador?');
-            //     if (isLoggedIn) {
-            //         document.getElementById('admin').classList.remove('hidden');
-            //         window.location.hash = '#admin';
-            //         mobileMenu.classList.remove('open');
-            //     }
-            // });
-
-            // Close menu when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-                    mobileMenu.classList.remove('open');
-                }
-            });
+                
 
             // Toggle identificação
             const identificarRadios = document.querySelectorAll('input[name="identificar"]');
@@ -41,25 +19,11 @@ import Swal from 'sweetalert2';
             // Simular login admin
             const adminLink = document.getElementById('admin-link');
             const adminSection = document.getElementById('admin');
-            // const loginBtn = document.getElementById('login-btn');
-            
-            // loginBtn.addEventListener('click', function() {
-            //     const isLoggedIn = confirm('Simulação: Deseja fazer login como administrador?');
-            //     if (isLoggedIn) {
-            //         adminSection.classList.remove('hidden');
-            //         window.location.hash = '#admin';
-            //     }
-            // });
 
-            // Consultar status
-            const consultarBtn = document.getElementById('consultar-btn');
+            
             const statusResult = document.getElementById('status-result');
             
-            consultarBtn.addEventListener('click', function() {
-                statusResult.classList.remove('hidden');
-            });
-
-            // Carregar perguntas do formulário
+                      // Carregar perguntas do formulário
             const perguntasContainer = document.getElementById('perguntas-container');
             const perguntas = [
                 {

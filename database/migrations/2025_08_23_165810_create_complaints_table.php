@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('protocol', 120)->unique();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('title', 255);
+            $table->string('compliance', 1)->default('N');
             $table->text('description')->nullable();
             $table->enum('status', ['ABERTA', 'EM_ANALISE', 'CONCLUIDA', 'ARQUIVADA'])->default('ABERTA');
          $table->timestamps();

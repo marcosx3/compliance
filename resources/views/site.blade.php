@@ -127,7 +127,7 @@
                 </div>
                 <div id="perguntas-container">
                     <form id="compliantForm" action="{{ route('complaints.store') }}" method="post" enctype="multipart/form-data">
-                        @csrf
+                       @csrf
                             <div class="mb-6">
                                 <label class="block text-gray-700 font-semibold mb-2">Deseja se identificar?</label>
                                 <div class="flex flex-wrap gap-4">
@@ -166,6 +166,22 @@
                                 <label class="block text-gray-700 font-semibold mb-2" for="title"> Descrição </label>
                                 <input type="text" name="description" id="description" class="w-full px-4 py-2 border rounded-lg">
                             </div>
+                            {{-- Pergunta sobre setor --}}
+                            <div class="mb-6">
+                                <label class="block text-gray-dark font-semibold mb-2">Denunciado é do setor de Compliance / Jurídico?</label>
+                                <div class="flex items-center space-x-6">
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="compliance_juridico" value="S" class="form-radio h-5 w-5 text-gray-custom" />
+                                        <span>Sim</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2">
+                                        <input type="radio" name="compliance_juridico" value="N" class="form-radio h-5 w-5 text-gray-custom" />
+                                        <span>Não</span>
+                                    </label>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">Se "Sim", a denúncia será encaminhada diretamente para o moderador.</p>
+                            </div>
+
                         @foreach($activeForm->questions ?? [] as $question)
                             <div class="mb-4">
                                     <label class="block text-gray-700 font-semibold mb-2">
@@ -300,24 +316,5 @@
 <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
     <div class="w-14 h-14 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
 </div>
-{{-- <script>
-    $(function () {
-        // Quando o form é submetido → mostra overlay
-        $("#compliantForm").on("submit", function () {
-            $("#loadingOverlay").removeClass("hidden");
-
-            // desabilita botão
-            const $btn = $(this).find("button[type=submit]");
-            $btn.prop("disabled", true).text("Processando...");
-        });
-
-        // Quando a página carrega de volta → esconde overlay (ex: erro de validação)
-        $(window).on("load", function () {
-            $("#loadingOverlay").addClass("hidden");
-            $("#registerForm button[type=submit]").prop("disabled", false).text("Criar conta");
-        });
-    });
-</script> --}}
 </body>
-
 </html>
