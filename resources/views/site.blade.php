@@ -2,68 +2,39 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Denúncias - Compliance</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canal de Denúncias | Sistema de Compliance Seguro</title>
+    <meta name="description" content="Sistema completo de canal de denúncias para compliance empresarial. Seguro, anônimo e em conformidade com LGPD." />
+    <meta name="author" content="Canal de Denúncias" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {{-- CSS principal --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/site.css', 'resources/js/app.js'])
 
     {{-- CSS/JS específico da página --}}
     @stack('styles')
     @stack('scripts')
 </head>
 
-<body class="min-h-screen ">
-    <!-- Navigation -->
-    <nav class="gradient-bg text-white shadow-lg fixed w-full top-0 z-50">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <i class="fas fa-shield-alt text-2xl"></i>
-                    <span class="text-xl font-bold">Fractal Compliance</span>
-                </div>
-
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex space-x-6">
-                    <a href="#home" class="hover:text-blue-100 transition">Início</a>
-                    <a href="#denuncia" class="hover:text-blue-100 transition">Fazer Denúncia</a>
-                    <a href="#acompanhar" class="hover:text-blue-100 transition">Acompanhar</a>
-
-                </div>
-
-                <div class="flex items-center space-x-4">
-                    <button id="login-btn"
-                        class="bg-white text-blue-600 px-4 py-2 rounded-lg font-semibold hover:bg-blue-50 transition hidden sm:block">
-                        <a href="{{'login'}}" class="block py-2 text-gray-800 hover:text-blue-600 font-semibold"><i
-                                class="fas fa-sign-in-alt mr-2"></i>Entrar</a>
-                    </button>
-                    <button id="mobile-menu-btn" class="md:hidden">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="mobile-menu md:hidden fixed top-16 left-0 w-full bg-white shadow-xl">
-            <div class="px-4 py-6 space-y-4">
-                <a href="#home" class="block py-2 text-gray-800 hover:text-blue-600 font-semibold">Início</a>
-                <a href="#denuncia" class="block py-2 text-gray-800 hover:text-blue-600 font-semibold">Fazer
-                    Denúncia</a>
-                <a href="#acompanhar" class="block py-2 text-gray-800 hover:text-blue-600 font-semibold">Acompanhar</a>
-                <a href="#admin" class="block py-2 text-gray-800 hover:text-blue-600 font-semibold">Admin</a>
-                <button id="mobile-login-btn" class="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold">
-                    <a href="{{'login'}}" class="block py-2 text-gray-800 hover:text-blue-600 font-semibold"><i
-                            class="fas fa-sign-in-alt mr-2"></i>Entrar</a>
-                </button>
-            </div>
-        </div>
-    </nav>
-
+<body class="min-h-screen bg-gray-50">
     <!-- Main Content -->
-    <main class="pt-16">
+
+    <!-- Top central control with two buttons -->
+    <header class="fixed left-0 right-0 top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-center">
+            <div class="inline-flex rounded-lg shadow-sm" role="tablist" aria-label="Controls">
+                <button id="btnDenuncia" type="button"
+                    class="px-6 py-2 rounded-l-lg font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition bg-blue-600 text-white"
+                    aria-controls="denuncia" aria-selected="true">Fazer Denúncia</button>
+                <button id="btnAcompanhar" type="button"
+                    class="px-6 py-2 rounded-r-lg font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 transition bg-gray-200 text-gray-800"
+                    aria-controls="acompanhar" aria-selected="false">Acompanhar</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-28">
         @if(session('success'))
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
@@ -77,44 +48,6 @@
                 });
             </script>
         @endif
-
-        <!-- Hero Section -->
-        <section id="home" class="py-16 md:py-24">
-            <div class="container mx-auto px-4">
-                <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div class="order-2 md:order-1">
-                        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-                            Sistema Seguro de <span class="text-blue-600">Denúncias</span>
-                        </h1>
-                        <p class="text-lg text-gray-600 mb-8">
-                            Canal confidencial para reportar irregularidades. Sua denúncia é importante para manter um
-                            ambiente ético e transparente.
-                        </p>
-                        <div class="flex flex-wrap gap-4">
-                            <a href="#denuncia"
-                                class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition text-sm sm:text-base">
-                                <i class="fas fa-plus-circle mr-2"></i>Fazer Denúncia
-                            </a>
-                            <a href="#acompanhar"
-                                class="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition text-sm sm:text-base">
-                                <i class="fas fa-search mr-2"></i>Acompanhar
-                            </a>
-                        </div>
-                    </div>
-                    <div class="order-1 md:order-2">
-                        <div class="bg-white rounded-xl shadow-xl p-4 sm:p-6 card-hover">
-                            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b6e1c102-97a9-4ae6-88c9-9ec1f20e9b57.png"
-                                alt="Ilustração de um sistema de denúncias com shield de proteção e gráficos de análise de dados"
-                                class="w-full h-auto rounded-lg" />
-                            <div class="mt-4 text-center">
-                                <h3 class="text-xl font-semibold text-gray-800">100% Confidencial</h3>
-                                <p class="text-gray-600">Seus dados são protegidos com criptografia avançada</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <section id="denuncia" class="py-16 bg-white">
             <div class="container mx-auto px-4">
@@ -240,12 +173,12 @@
                     </form>
             </div>
         </div>
-            
+
         </section>
 
 
-        <!-- Acompanhar Denúncia Section -->
-        <section id="acompanhar" class="py-16 bg-gray-50">
+        <!-- Acompanhar Denúncia Section (oculta por padrão) -->
+        <section id="acompanhar" class="py-16 bg-gray-50 hidden">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Acompanhe sua Denúncia</h2>
@@ -272,7 +205,6 @@
             </div>
         </section>
 
-      
     </main>
 
     <!-- Footer -->
@@ -280,7 +212,7 @@
         <div class="container mx-auto px-4">
             <div class="grid md:grid-cols-3 gap-8">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Fractal Compliance</h3>
+                    <h3 class="text-xl font-bold mb-4">Compliance</h3>
                     <p class="text-gray-400">
                         Sistema seguro e confidencial para reportar irregularidades e promover um ambiente ético.
                     </p>
@@ -297,7 +229,6 @@
                 <div>
                     <h4 class="font-semibold mb-4">Links Rápidos</h4>
                     <ul class="space-y-2">
-                        <li><a href="#home" class="text-gray-400 hover:text-white transition">Início</a></li>
                         <li><a href="#denuncia" class="text-gray-400 hover:text-white transition">Fazer Denúncia</a>
                         </li>
                         <li><a href="#acompanhar" class="text-gray-400 hover:text-white transition">Acompanhar</a></li>
@@ -305,7 +236,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>© 2025 Fractal Compliance. Todos os direitos reservados.</p>
+                <p>© 2025 Compliance. Todos os direitos reservados.</p>
             </div>
         </div>
     </footer>
@@ -316,5 +247,65 @@
 <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
     <div class="w-14 h-14 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
 </div>
+
+<script>
+    // botões de topo que alternam entre sections mantendo o comportamento original do formulário
+    const btnDenuncia = document.getElementById('btnDenuncia');
+    const btnAcompanhar = document.getElementById('btnAcompanhar');
+    const secDenuncia = document.getElementById('denuncia');
+    const secAcompanhar = document.getElementById('acompanhar');
+
+    function activateDenuncia() {
+        secDenuncia.classList.remove('hidden');
+        secAcompanhar.classList.add('hidden');
+
+        btnDenuncia.classList.remove('bg-gray-200','text-gray-800');
+        btnDenuncia.classList.add('bg-blue-600','text-white');
+
+        btnAcompanhar.classList.remove('bg-blue-600','text-white');
+        btnAcompanhar.classList.add('bg-gray-200','text-gray-800');
+
+        btnDenuncia.setAttribute('aria-selected','true');
+        btnAcompanhar.setAttribute('aria-selected','false');
+
+        // scroll to section for focus (optional)
+        secDenuncia.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+
+    function activateAcompanhar() {
+        secDenuncia.classList.add('hidden');
+        secAcompanhar.classList.remove('hidden');
+
+        btnAcompanhar.classList.remove('bg-gray-200','text-gray-800');
+        btnAcompanhar.classList.add('bg-blue-600','text-white');
+
+        btnDenuncia.classList.remove('bg-blue-600','text-white');
+        btnDenuncia.classList.add('bg-gray-200','text-gray-800');
+
+        btnDenuncia.setAttribute('aria-selected','false');
+        btnAcompanhar.setAttribute('aria-selected','true');
+
+        secAcompanhar.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }
+
+    // ativar denúncia por padrão
+    document.addEventListener('DOMContentLoaded', function () {
+        activateDenuncia();
+
+        btnDenuncia.addEventListener('click', activateDenuncia);
+        btnAcompanhar.addEventListener('click', activateAcompanhar);
+
+        // mantém funcionalidade do formulário dinâmico (mostrar dados de identificação)
+        const radiosIdent = document.querySelectorAll('input[name="identificar"]');
+        const dadosIdent = document.getElementById('dados-identificacao');
+        radiosIdent.forEach(r => r.addEventListener('change', function (){
+            if (this.value === 'sim') {
+                dadosIdent.classList.remove('hidden');
+            } else {
+                dadosIdent.classList.add('hidden');
+            }
+        }));
+    });
+</script>
 </body>
 </html>
