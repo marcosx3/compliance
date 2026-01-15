@@ -9,7 +9,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="flex bg-gray-100 min-h-screen text-gray-900">
+<body class="flex bg-gray-100 min-h-screen text-gray-900" style="background-image: url('prospen-fundo-claro.jpg');">
 
     <!-- Sidebar -->
     <aside id="sidebar"

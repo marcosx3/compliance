@@ -51,5 +51,5 @@ Route::post('/complaints/comment/{id}', [ComplaintController::class, 'comment'])
 Route::middleware(['auth'])->prefix('complaints')->name('complaints.')->group(function () {
     Route::get('/', [ComplaintController::class, 'index'])->name('index');
     Route::get('/complaints/{id}', [ComplaintController::class, 'show'])->name('show');
-    Route::post('/complaints/{id}', [ComplaintController::class, 'update'])->name('update');
+    Route::put('/complaints/{id}', [ComplaintController::class, 'update'])->name('update');
 });

@@ -8,6 +8,7 @@
     <meta name="description" content="Sistema completo de canal de denúncias para compliance empresarial. Seguro, anônimo e em conformidade com LGPD." />
     <meta name="author" content="Canal de Denúncias" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="{{ asset('img/favicon-fractal.ico') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {{-- CSS principal --}}
     @vite(['resources/css/site.css', 'resources/js/app.js'])
@@ -115,7 +116,7 @@
                                 <p class="text-sm text-gray-500 mt-1">Se "Sim", a denúncia será encaminhada diretamente para o moderador.</p>
                             </div>
 
-                        @foreach($activeForm->questions ?? [] as $question)
+                        <!-- @foreach($activeForm->questions ?? [] as $question)
                             <div class="mb-4">
                                     <label class="block text-gray-700 font-semibold mb-2">
                                         {{ $question['text'] }}
@@ -167,7 +168,85 @@
                                 @default
                                 <input type="text" id="answers[{{ $question['id'] }}]" name="answers[{{ $question['id'] }}]" class="w-full px-4 py-2 border rounded-lg">
                         @endswitch
-                        @endforeach
+                        @endforeach -->
+                                             @foreach($activeForm?->questions ?? [] as $question)
+
+    <div class="mb-4">
+        <label class="block text-gray-700 font-semibold mb-2">
+            {{ $question->text }}
+            @if($question->required)
+                <span class="text-red-500">*</span>
+            @endif
+        </label>
+
+        @switch($question->type)
+
+            @case('text')
+                <input type="text"
+                       name="answers[{{ $question->id }}]"
+                       class="w-full px-4 py-2 border rounded-lg"
+                       {{ $question->required ? 'required' : '' }}>
+            @break
+
+            @case('textarea')
+                <textarea name="answers[{{ $question->id }}]"
+                          rows="4"
+                          class="w-full px-4 py-2 border rounded-lg"
+                          {{ $question->required ? 'required' : '' }}></textarea>
+            @break
+
+            @case('select')
+                <select name="answers[{{ $question->id }}]"
+                        class="w-full px-4 py-2 border rounded-lg"
+                        {{ $question->required ? 'required' : '' }}>
+                    <option value="">Selecione...</option>
+                    @foreach($question->options as $option)
+                        <option value="{{ $option->value }}">
+                            {{ $option->value }}
+                        </option>
+                    @endforeach
+                </select>
+            @break
+
+            @case('radio')
+                <div class="flex gap-4">
+                    @foreach($question->options as $option)
+                        <label class="flex items-center gap-2">
+                            <input type="radio"
+                                   name="answers[{{ $question->id }}]"
+                                   value="{{ $option->value }}"
+                                   {{ $question->required ? 'required' : '' }}>
+                            {{ $option->value }}
+                        </label>
+                    @endforeach
+                </div>
+            @break
+
+            @case('checkbox')
+                <div class="flex flex-col gap-2">
+                    @foreach($question->options as $option)
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox"
+                                   name="answers[{{ $question->id }}][]"
+                                   value="{{ $option->value }}">
+                            {{ $option->value }}
+                        </label>
+                    @endforeach
+                </div>
+            @break
+
+            @case('file')
+                <input type="file"
+                       name="answers[{{ $question->id }}][]"
+                       multiple
+                       class="w-full px-4 py-2 border rounded-lg"
+                       {{ $question->required ? 'required' : '' }}>
+            @break
+
+        @endswitch
+    </div>
+@endforeach
+
                     </div>
                         <button class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"  type="submit" >Efetuar Denuncia</button>
                     </form>

@@ -93,40 +93,43 @@ class TemplateController extends Controller
         return view('templates.edit', compact('template'));
     }
 
-
- public function update(Request $request, Template $template)
+public function update(Request $request, Template $template)
 {
-    
     $data = $request->validate([
         'name' => 'required|string|max:150',
         'questions' => 'required|array',
         'questions.*.text' => 'required|string|max:255',
         'questions.*.type' => 'required|in:file,text,number,date,select,radio',
-        'questions.*.required' => 'boolean',
+        'questions.*.required' => 'sometimes|accepted',
         'questions.*.order' => 'nullable|integer',
-        'questions.*.opcoes' => 'array', // só para múltipla escolha
+        'questions.*.options' => 'nullable|array',
     ]);
 
-    // Atualiza apenas esse template para "ativo"
+    // desativa todos
     Template::query()->update(['status' => false]);
+
+    // ativa esse
     $template->update([
         'name' => $data['name'],
         'status' => true,
     ]);
-    Log::info('Template atualizado: ', ['template_id' => $template->id, 'name' => $template->name]);
-    // Remove perguntas antigas (cascade apaga opções se FK estiver configurada)
-    $template->questions()->delete();
+
+    // apaga perguntas antigas
+    \DB::table('questions')->where('template_id', $template->id)->delete();
+
 
     foreach ($data['questions'] as $order => $p) {
+
         $question = $template->questions()->create([
             'text' => $p['text'],
             'type' => $p['type'],
-            'required' => $p['required'] ?? false,
-            'order' => $p['order'] ?? $order,
+            'required' => isset($p['required']),
+            'order' => $order,
         ]);
 
-        if ($p['type'] === 'select' && !empty($p['opcoes'])) {
-            foreach ($p['opcoes'] as $op) {
+        // salva opções corretamente
+        if ($p['type'] === 'select' && !empty($p['options'])) {
+            foreach ($p['options'] as $op) {
                 $question->options()->create([
                     'value' => $op,
                 ]);
@@ -134,7 +137,9 @@ class TemplateController extends Controller
         }
     }
 
-    return redirect()->route('template.index')->with('success', 'Formulário atualizado com sucesso!');
+    return redirect()
+        ->route('template.index')
+        ->with('success', 'Formulário atualizado com sucesso!');
 }
 
     /**
