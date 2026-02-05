@@ -7,12 +7,6 @@ use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TemplateController;
 
-
-
-// Route::get('/compliant', function () {
-//     return view('site');
-// });
-
 Route::get('/', [SiteController::class,'index']); // rota pública
 // Consulta pública pelo protocolo
 Route::get('/consulta', [ComplaintController::class, 'consulta'])->name('complaints.consulta');
