@@ -4,8 +4,7 @@
     <div class="flex items-center justify-center p-3 ">
         <img src="{{ asset('logo-fractal-claro.png') }}" alt="logo fractal claro" class="h-10">
     </div>
-<form method="POST" action="{{ route('login') }}" class="mt-6 space-y-4">
-    @csrf
+<form action="{{ route('login.submit') }}" method="POST">    @csrf
     <div>
         <label for="email" class="block text-sm font-medium"  style="color:#5d596c;">E-mail</label>
         <input type="email" name="email" id="email" required

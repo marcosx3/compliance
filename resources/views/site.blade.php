@@ -270,7 +270,6 @@
 		<div class="max-w-md mx-auto bg-white rounded-xl shadow-md p-6">
 			<form action="{{ route('login.submit') }}" method="post">
 				@csrf
-
 				<div class="mb-4">
 					<label class="block text-gray-700 font-semibold mb-2">E-mail</label>
 					<input type="email" name="email"

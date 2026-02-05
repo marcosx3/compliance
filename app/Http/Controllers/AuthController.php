@@ -29,17 +29,16 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-          return redirect('/dashboard');
+
+            return redirect()->route('dashboard.dashboard');
         }
 
         return back()->withErrors([
             'email' => 'Credenciais inválidas.',
         ])->onlyInput('email');
     }
-
-
 
     // Processa cadastro
     public function register(Request $request)
@@ -60,16 +59,16 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect()->route('dashboard.dashboard');
-
     }
 
     // Logout
     public function logout(Request $request)
     {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }
