@@ -268,7 +268,7 @@
 		</div>
 
 		<div class="max-w-md mx-auto bg-white rounded-xl shadow-md p-6">
-			<form action="{{ route('login') }}" method="post">
+			<form action="{{ route('login.submit') }}" method="post">
 				@csrf
 
 				<div class="mb-4">
