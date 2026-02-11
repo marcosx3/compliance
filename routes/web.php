@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TemplateController;
@@ -10,6 +11,23 @@ use App\Http\Controllers\TemplateController;
 Route::get('/', [SiteController::class,'index']); // rota pública
 // Consulta pública pelo protocolo
 Route::get('/consulta', [ComplaintController::class, 'consulta'])->name('complaints.consulta');
+Route::get('/consulta', [ComplaintController::class, 'consulta'])->name('complaints.consulta');
+Route::get('/consulta', [ComplaintController::class, 'consulta'])->name('complaints.consulta');
+Route::get('/consulta', [ComplaintController::class, 'consulta'])->name('complaints.consulta');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/perfil', [ProfileController::class, 'index'])
+        ->name('profile.index');
+    Route::get('/perfil/editar', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+    Route::put('/perfil', [ProfileController::class, 'update'])
+        ->name('profile.update');
+    Route::delete('/perfil', [ProfileController::class, 'destroy'])
+        ->name('profile.delete');
+
+});
+
+
 
 Route::controller(AuthController::class)->group(function () {
     // Login
@@ -20,6 +38,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register')->name('register.submit');
     // Logout
     Route::post('/logout', 'logout')->name('logout');
+  
+  
+
 });
 
 
