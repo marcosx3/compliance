@@ -3,7 +3,10 @@
 @section('content')
 <div class="max-w-3xl mx-auto py-8">
     <h1 class="text-2xl font-bold mb-6">Minhas Denúncias</h1>
-
+    <!-- nova denuncia -->
+    <a href="{{ route('complaints.create') }}" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 mb-4 inline-block">
+        <i class="fas fa-plus"></i> Nova Denúncia
+    </a>
     @forelse($denuncias as $denuncia)
         <div class="bg-white rounded-lg shadow p-4 mb-4 border border-gray-200">
             <div class="flex justify-between items-center mb-2">

@@ -9,6 +9,7 @@ use App\Mail\ComplaintCommentMail;
 use App\Mail\ComplaintUpdatedMail;
 use App\Models\Complaint;
 use App\Models\Response;
+use App\Models\Template;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,13 +26,40 @@ use function Illuminate\Log\log;
 
 class ComplaintController extends Controller
 {
-    /**
-     * Summary of index
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function index()
+ public function index(Request $request)
     {
-        $complaints = Complaint::with('user')->orderBy('created_at','desc')->paginate(10);
+        $query = Complaint::with('user');
+
+        // 🔎 FILTRO POR PROTOCOLO OU TÍTULO
+        if ($request->filled('busca')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('protocol', 'like', '%' . $request->busca . '%')
+                  ->orWhere('title', 'like', '%' . $request->busca . '%');
+            });
+        }
+
+        // 🔎 FILTRO POR STATUS
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // 🔎 FILTRO POR DATA
+        if ($request->filled('data_inicio')) {
+            $query->whereDate('created_at', '>=', $request->data_inicio);
+        }
+
+        if ($request->filled('data_fim')) {
+            $query->whereDate('created_at', '<=', $request->data_fim);
+        }
+
+        // 🔽 ORDENAÇÃO
+        $ordenarPor = $request->get('ordenar_por', 'created_at');
+        $direcao = $request->get('direcao', 'desc');
+
+        $query->orderBy($ordenarPor, $direcao);
+
+        $complaints = $query->paginate(10)->withQueryString();
+
         return view('compliant.index', compact('complaints'));
     }
 
@@ -41,7 +69,10 @@ class ComplaintController extends Controller
      */
     public function create()
     {
-        return view('compliant.create');
+          $activeForm = Template::with(['questions.options'])
+            ->where('status', true)
+            ->first();
+        return view('compliant.create', compact('activeForm'));
     }
 
     /**

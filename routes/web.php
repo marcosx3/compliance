@@ -67,4 +67,17 @@ Route::middleware(['auth'])->prefix('complaints')->name('complaints.')->group(fu
     Route::get('/', [ComplaintController::class, 'index'])->name('index');
     Route::get('/complaints/{id}', [ComplaintController::class, 'show'])->name('show');
     Route::put('/complaints/{id}', [ComplaintController::class, 'update'])->name('update');
+    Route::get('/complaints/create/index', [ComplaintController::class, 'create'])->name('create');
+    });
+
+
+    use Illuminate\Support\Facades\Mail;
+
+Route::get('/teste-email', function () {
+    Mail::raw('Teste de envio', function ($msg) {
+        $msg->to('marcos-oliveirasilva@hotmail.com')
+            ->subject('Teste SMTP');
+    });
+
+    return 'Email enviado!';
 });

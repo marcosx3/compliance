@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Consulta - Compliance' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    	<link rel="shortcut icon" href="{{ asset('img/favicon-fractal.ico') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
@@ -40,8 +41,11 @@
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <h1 class="text-xl font-bold text-gray-800">
-                                <i class="fas fa-shield-alt text-blue-600 mr-2"></i>
-                                Sistema de Compliance
+                                <div class="flex">
+                                    <a href="/">
+                                        <img src="{{ asset('ico-32-fractal.png') }}" alt="logo fractal claro" >
+                                    </a>
+                                </div>
                             </h1>
                         </div>
                     </div>

@@ -31,7 +31,7 @@
                     @endif
                 </div>
                 <button type="submit"
-                        class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
+                        class="w-full bg-gray-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg">
                     <i class="fas fa-search"></i>Consultar Status da Denúncia
                 </button>
             </form>

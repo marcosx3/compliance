@@ -30,7 +30,7 @@
 
 			<button id="btnDenuncia" type="button"
 				class="tab-btn px-6 py-2 rounded-lg font-semibold text-sm transition
-					   bg-[#4b5563] text-white"
+					   bg-[#4b5563] text-white bg-gray-600 "
 				aria-controls="denuncia"
 				aria-selected="true">
 				Fazer Denúncia
@@ -38,7 +38,7 @@
 
 			<button id="btnAcompanhar" type="button"
 				class="tab-btn px-6 py-2 rounded-lg font-semibold text-sm transition
-					   text-[#4b5563]"
+					   text-[#4b5563] bg-gray-600 "
 				aria-controls="acompanhar"
 				aria-selected="false">
 				Acompanhar
@@ -46,7 +46,7 @@
 
 			<button id="btnLogin" type="button"
 				class="tab-btn px-6 py-2 rounded-lg font-semibold text-sm transition
-					   text-[#4b5563]"
+					   text-[#4b5563] bg-gray-600 "
 				aria-controls="login"
 				aria-selected="false">
 				Login
@@ -219,7 +219,7 @@
 	@endforeach
 
 						</div>
-							<button class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"  type="submit" >Efetuar Denuncia</button>
+							<button class="w-full bg-gray-600 text-white py-3 rounded-lg font-semibold hover:bg-gray-700 transition"  type="submit" >Efetuar Denuncia</button>
 						</form>
 				</div>
 			</div>
@@ -246,7 +246,7 @@
 										class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
 								</div>
 								<button id="consultar-btn" type="submit"
-									class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+									class="w-full bg-gray-600  text-white py-3 rounded-lg font-semibold hover:bg-gray-700 transition">
 									<i class="fas fa-search mr-2"></i>Consultar Status
 								</button>
 							</div>
@@ -285,7 +285,7 @@
 				</div>
 
 				<button type="submit"
-					class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+					class="w-full bg-gray-600  text-white py-3 rounded-lg font-semibold hover:bg-gray-700  transition">
 					Entrar
 				</button>
 			</form>
@@ -357,13 +357,13 @@
 	// Controla estado visual dos botões
 	function setActiveButton(activeBtn) {
 		[btnDenuncia, btnAcompanhar, btnLogin].forEach(btn => {
-			btn.classList.remove('bg-blue-600', 'text-white');
+			btn.classList.remove('bg-gray-600', 'text-white');
 			btn.classList.add('bg-gray-200', 'text-gray-800');
 			btn.setAttribute('aria-selected', 'false');
 		});
 
 		activeBtn.classList.remove('bg-gray-200', 'text-gray-800');
-		activeBtn.classList.add('bg-blue-600', 'text-white');
+		activeBtn.classList.add('bg-gray-600', 'text-white');
 		activeBtn.setAttribute('aria-selected', 'true');
 	}
 
